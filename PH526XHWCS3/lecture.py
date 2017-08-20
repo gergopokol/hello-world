@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import scipy.stats as ss
+import matplotlib.pyplot as plt
 
 p1 = np.array([1, 1])
 p2 = np.array([4, 4])
@@ -54,3 +55,19 @@ def knn_predict(p, points, outcomes, k=5):
     """x"""
     ind = find_nearest_neighbors(p, points, k)
     return majority_vote(outcomes[ind])
+
+
+def generate_synthetic_data(n=50):
+    """Create two sets of points from bivariate normal distributions."""
+    points = np.concatenate((ss.norm(0, 1).rvs((n, 2)), ss.norm(0, 1).rvs((n, 2))), axis=0)
+    outcomes = np.concatenate((np.repeat(0, n), np.repeat(0, n)))
+    return (points, outcomes)
+
+
+points, outcomes = generate_synthetic_data()
+
+n=20
+plt.figure()
+plt.plot(points[:n,0], points[:n,1], "ro")
+plt.plot(points[n:,0], points[n:,1], "bo")
+plt.savefig("bivariate_data.pdf")
