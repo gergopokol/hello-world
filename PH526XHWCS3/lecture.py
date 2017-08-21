@@ -71,3 +71,30 @@ plt.figure()
 plt.plot(points[:n,0], points[:n,1], "ro")
 plt.plot(points[n:,0], points[n:,1], "bo")
 plt.savefig("bivariate_data.pdf")
+
+
+
+def make_prediction_grid(predictors, outcomes, limits, h, k):
+    """Classify each point in the prediction grid."""
+    (x_min, x_max, y_min, y_max) = limits
+    xs = np.arange(x_min, x_max, h)
+    ys = np.arange(y_min, y_max, h)
+    xx, yy = np.meshgrid(xs, ys)
+
+    prediction_grid = np.zeros(xx.shape, dtype=int)
+    for i,x in enumerate(xs):
+        for j,y in enumerate(ys):
+            p = np.array([x, y])
+            prediction_grid[j,i] = knn_predict(p, predictors, outcomes, k)
+    return (xx, yy, prediction_grid)
+
+
+from sklearn import datasets
+iris = datasets.load_iris()
+
+predictors = iris.data[:, 0:2]
+outcomes = iris.target
+plt.plot(predictors[outcomes == 0][:,0], predictors[outcomes == 0][:,1], "ro")
+plt.plot(predictors[outcomes == 1][:,0], predictors[outcomes == 1][:,1], "go")
+plt.plot(predictors[outcomes == 2][:,0], predictors[outcomes == 2][:,1], "bo")
+plt.savefig("iris.pdf")
